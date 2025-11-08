@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BluetoothConnect - Tecnología Inalámbrica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Navegación Flotante */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .navbar a:hover {
+            color: #00d9ff;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00d9ff;
+            transition: width 0.3s;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero con efecto glassmorphism */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.8;
+        }
+
+        .hero-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .circle1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circle2 {
+            width: 200px;
+            height: 200px;
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        .circle3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 30%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: slideDown 1s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: slideUp 1s ease-out;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            color: #0a0e27;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #0a0e27;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sección Productos */
+        .productos {
+            padding: 100px 20px;
+            background: #0f1428;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            margin-bottom: 60px;
+        }
+
+        .productos-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .producto {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .producto::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(0, 255, 136, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .producto:hover {
+            transform: translateY(-10px);
+            border-color: #00d9ff;
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+        }
+
+        .producto:hover::before {
+            opacity: 1;
+        }
+
+        .producto-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .producto h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #00d9ff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .producto p {
+            opacity: 0.8;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .precio {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Características */
+        .caracteristicas {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #1a1d3a 0%, #0a0e27 100%);
+        }
+
+        .caracteristicas-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .caracteristica {
+            text-align: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        .caracteristica-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .caracteristica h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #00d9ff;
+        }
+
+        /* Proceso */
+        .proceso {
+            padding: 100px 20px;
+            background: #0f1428;
+        }
+
+        .timeline {
+            max-width: 1000px;
+            margin: 60px auto 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #00d9ff, #00ff88);
+        }
+
+        .paso-timeline {
+            display: flex;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .paso-timeline:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .paso-content {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .paso-numero-timeline {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0a0e27;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Contacto */
+        .contacto {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .contacto-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contacto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .contacto-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .contacto-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .contacto-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .contacto-item a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contacto-item h3 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0e27;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+            margin: 5px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .navbar ul {
+                gap: 15px;
+                font-size: 0.9rem;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .paso-timeline {
+                flex-direction: column !important;
+                padding-left: 60px;
+            }
+
+            .paso-content {
+                width: 100%;
+            }
+
+            .paso-numero-timeline {
+                left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#productos">Productos</a></li>
+            <li><a href="#caracteristicas">Características</a></li>
+            <li><a href="#proceso">Proceso</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="inicio">
+        <div class="hero-bg"></div>
+        <div class="hero-circles">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="circle circle3"></div>
+        </div>
+        <div class="hero-content">
+            <h1>BluetoothConnect</h1>
+            <p>Dale nueva vida a tu equipo de sonido con tecnología inalámbrica</p>
+            <div class="hero-buttons">
+                <a href="#productos" class="btn btn-primary">Ver Productos</a>
+                <a href="#contacto" class="btn btn-secondary">Contactar</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos -->
+    <section class="productos" id="productos">
+        <h2 class="section-title">Nuestros Productos</h2>
+        <p class="section-subtitle">Soluciones para cada necesidad</p>
+        <div class="productos-container">
+            <div class="producto">
+                <div class="producto-icon">🎧</div>
+                <h3>Módulo Básico</h3>
+                <p>Perfecto para equipos caseros. Instalación plug & play, alcance de 10 metros.</p>
+                <div class="precio">Bs. 80</div>
+                <a href="#contacto" class="btn btn-primary">Comprar Ahora</a>
+            </div>
+
+            <div class="producto">
+                <div class="producto-icon">🔊</div>
+                <h3>Módulo Premium</h3>
+                <p>Mayor calidad de audio, alcance de 20 metros. Ideal para uso profesional.</p>
+                <div class="precio">Bs. 150</div>
+                <a href="#contacto" class="btn btn-primary">Comprar Ahora</a>
+            </div>
+
+            <div class="producto">
+                <div class="producto-icon">🛠️</div>
+                <h3>Pack Completo</h3>
+                <p>Módulo + instalación profesional. Incluye garantía de 6 meses.</p>
+                <div class="precio">Bs. 200</div>
+                <a href="#contacto" class="btn btn-primary">Comprar Ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características -->
+    <section class="caracteristicas" id="caracteristicas">
+        <h2 class="section-title">¿Por Qué Elegirnos?</h2>
+        <div class="caracteristicas-grid">
+            <div class="caracteristica">
+                <div class="caracteristica-icon">💰</div>
+                <h3>Económico</h3>
+                <p>Ahorra dinero reutilizando tu equipo actual</p>
+            </div>
+
+            <div class="caracteristica">
+                <div class="caracteristica-icon">⚡</div>
+                <h3>Rápido</h3>
+                <p>Instalación en menos de 15 minutos</p>
+            </div>
+
+            <div class="caracteristica">
+                <div class="caracteristica-icon">🎵</div>
+                <h3>Calidad HD</h3>
+                <p>Audio de alta definición sin cables</p>
+            </div>
+
+            <div class="caracteristica">
+                <div class="caracteristica-icon">♻️</div>
+                <h3>Ecológico</h3>
+                <p>Reduce desechos electrónicos</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proceso -->
+    <section class="proceso" id="proceso">
+        <h2 class="section-title">Proceso Simple</h2>
+        <p class="section-subtitle">En 4 pasos disfrutas de música inalámbrica</p>
+        <div class="timeline">
+            <div class="paso-timeline">
+                <div class="paso-content">
+                    <h3>Contacta</h3>
+                    <p>Envíanos un mensaje por WhatsApp o redes sociales</p>
+                </div>
+                <div class="paso-numero-timeline">1</div>
+            </div>
+
+            <div class="paso-timeline">
+                <div class="paso-content">
+                    <h3>Elige</h3>
+                    <p>Selecciona el módulo perfecto para tu equipo</p>
+                </div>
+                <div class="paso-numero-timeline">2</div>
+            </div>
+
+            <div class="paso-timeline">
+                <div class="paso-content">
+                    <h3>Instala</h3>
+                    <p>Nosotros instalamos o te guiamos paso a paso</p>
+                </div>
+                <div class="paso-numero-timeline">3</div>
+            </div>
+
+            <div class="paso-timeline">
+                <div class="paso-content">
+                    <h3>Disfruta</h3>
+                    <p>Conecta tu celular y reproduce tu música favorita</p>
+                </div>
+                <div class="paso-numero-timeline">4</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contacto" id="contacto">
+        <div class="contacto-container">
+            <h2 class="section-title">Contáctanos</h2>
+            <p class="section-subtitle">Estamos aquí para ayudarte</p>
+            <div class="contacto-grid">
+                <div class="contacto-item">
+                    <div class="contacto-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                    </div>
+                    <h3>WhatsApp</h3>
+                    <a href="https://wa.me/59112345678">+591 12345678</a>
+                </div>
+
+                <div class="contacto-item">
+                    <div class="contacto-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </div>
+                    <h3>Facebook</h3>
+                    <a href="#">@BluetoothConnectBO</a>
+                </div>
+
+                <div class="contacto-item">
+                    <div class="contacto-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </div>
+                    <h3>Instagram</h3>
+                    <a href="#">@bluetoothconnect.bo</a>
+                </div>
+
+                <div class="contacto-item">
+                    <div class="contacto-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+                            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+                        </svg>
+                    </div>
+                    <h3>TikTok</h3>
+                    <a href="#">@bluetoothconnect.bo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 BluetoothConnect</p>
+        <p>Cochabamba - Bolivia</p>
+        <p>Moderniza tu sonido, mantén tu estilo</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animación de productos al scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.producto, .caracteristica, .paso-timeline').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
